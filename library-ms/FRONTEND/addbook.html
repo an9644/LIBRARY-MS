@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        async function addBook(event){
+            event.preventDefault();
+
+            const Title=document.getElementById('title').value
+            const Bookid=document.getElementById('bookid').value
+            const Author=document.getElementById('author').value 
+            const Genre=document.getElementById('genre').value 
+            const Description=document.getElementById('description').value
+            const Price=document.getElementById('price').value
+
+            const bookData = {Booktitle: Title,Genre:Genre, Author: Author,Description:Description,Price: Price};
+        localStorage.setItem(Bookid, JSON.stringify(bookData));
+
+           try {
+
+            const response=await fetch("http://127.0.0.1:3011/addbook",{
+                method: 'POST',
+                credentials : 'include',
+                headers:{ "Content-Type": 'application/json' },
+                body:JSON.stringify({
+                    title :Title,
+                    bookid :Bookid,
+                    author: Author,
+                    genre:Genre,
+                    description:Description,
+                    price:Price
+                })
+            });
+            const data=await response.json();
+            console.log(data)            
+
+            // console.log(response.status)
+            if(response.status==400){
+               alert("Book Already Exist!!")
+            }else{                
+                alert("Book added successfully!!")
+                window.location.href='./viewbooks.html'
+            }           
+
+           }catch (error) {
+            console.error(error);
+             alert("Error occurred while adding book");
+            
+           }
+        }
+        async function logout(){
+
+try {
+    const responce= await fetch("http://127.0.0.1:3011/logout",{
+method:'POST',
+credentials: 'include', 
+});
+if(responce.ok){
+    localStorage.removeItem('library');
+    console.log('logout successfully');
+    window.location.href="./signup.html"
+    alert("Logout Successfullly!")
+
+}else{
+    console.log('logout failed');
+}
+
+} catch (error) {
+    console.error('Logout failed:', error);
+}          
+}
+
+
+    </script>
+
+
+</head>
+<body class="bg-purple-100">
+    
+    <div class="flex justify-center gap-16 text-2xl  mt-5 text-purple-800 p-4">
+        <a href="home.html">Home</a>
+        <a href="addbook.html" >Add Book</a>
+        <a href="viewbooks.html">View Book</a>
+        <a href="login.html" onclick="logout()">Logout</a>
+    </div>
+    <form action="" onsubmit="addBook(event)">
+        <div class="flex justify-center items-center h-screen mt-12 ">
+            <div class="bg-gray-100 p-8 rounded-xl shadow-xl w-[600px]">
+                <p class="text-3xl font-bold mb-4 text-center text-purple-800 ">Add Book</p>
+                    <div class="mb-4">
+                        <label class=" text-purple-800 block  text-sm font-bold mb-2" > Title :</label>
+                        <input required id="title" class="shadow appearance-none border rounded w-full py-2 px-3   leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Book Title">
+                    </div>
+                    <div class="mb-4">
+                        <label class=" text-purple-800 block  text-sm font-bold mb-2" > Author :</label>
+                        <input required id="author" class="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline" id="author" type="text" placeholder="author name">
+                    </div>
+                    <div class="mb-4">
+                        <label class="text-purple-800 block  text-sm font-bold mb-2" > Book ID :</label>
+                        <input required id="bookid" class="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Book ID">
+                    </div>
+                    <div class="mb-4">
+                        <label class="text-purple-800 block  text-sm font-bold mb-2" > Genre :</label>
+                        <select required id="genre" class="text-gray-700 shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="Select" selected>Select</option>
+                            <option value="Novel">Novel</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Action Fiction">Action Fiction</option>
+                            <option value="Fairy Tale">Fairy Tale</option>
+                            <option value="History">History</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class=" text-purple-800 block  text-sm font-bold mb-2" for="Description" > Description </label>
+                        <textarea required id="description" class=" shadow appearance-none border rounded w-full py-2 px-3   leading-tight focus:outline-none  focus:shadow-outline" placeholder="Short Description...." cols="30" rows="10"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label  class=" text-purple-800 block  text-sm font-bold mb-2" > Price :</label>
+                        <input required id="price" class="shadow appearance-none border rounded w-full py-2 px-3   leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Price">
+                    </div>
+                            <button 
+                            class="ml-52 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:shadow-md transition duration-200"
+                            type="submit" >  Add Book  </button>       
+                 </div>
+        </div>
+    </form>
+           
+</body>
+</html>

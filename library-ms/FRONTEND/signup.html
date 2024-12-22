@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      async function signup(event){
+            event.preventDefault()   // set the evnt as default 
+           const name=document.getElementById('name').value
+           const email=document.getElementById('email').value
+           const username=document.getElementById('username').value
+           const password=document.getElementById('password').value
+           const role=document.getElementById('role').value
+
+           console.log(name,email,username,password,role)
+
+           //promise pending error
+           try {
+            const response=await fetch("http://127.0.0.1:3011/signup",{ 
+              method:'POST',
+             headers:{ "Content-Type": 'application/json' },
+              body:JSON.stringify( {   // ethanu req.body
+                   Name:name,
+                   Email:email,
+                   Username:username,
+                   Password:password,
+                   Role:role
+           })
+
+       })
+       console.log(response)   
+       if(response.status===201){
+           window.location.href='./login.html'
+           alert("Account created successfullt")
+       }else if(response.status===400){
+           alert("Username already exist")
+       }else{
+           alert("Server error try after sometime")
+       }
+       const data=await response.json();
+       console.log(data)
+           } catch (error) {
+            console.log(error);     
+           }}           
+
+
+
+    </script>
+</head>
+<body class="bg-purple-100">
+      <form  onsubmit="signup(event)">
+        <div class="flex justify-center items-center mt-32  h-auto bg-gray-100 ">
+          <div class="bg-white rounded-lg shadow-md p-8 w-96 ">
+            <h2 class="text-3xl text-center text-purple-800 font-bold mb-4">Sign Up</h2>
+              <div class="mb-4">
+                <label for="name" class="text-sm text-purple-800 font-bold mb-2" >Name :</label>
+                <input id="name" required type="text" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" placeholder="Enter your  Name">
+              </div>
+              <div class="mb-4">
+                  <label for="email"  class="text-sm text-purple-800 font-bold mb-2">Email :</label>
+                  <input id="email" required type="email" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" placeholder="Enter your email">
+                </div>
+                <div class="mb-4">
+                  <label for="username" class="text-sm text-purple-800 font-bold mb-2">Username :</label>
+                  <input id="username" required type="text" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" placeholder="Enter your  username">
+                </div>
+              <div class="mb-4">
+                <label for="password" class="text-sm text-purple-800 font-bold mb-2">Password :</label>
+                <input id="password" required type="password" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" placeholder="Password">
+              </div>
+              <div class="mb-4">
+                <label for="role" class="text-sm text-purple-800 font-bold mb-2">Role :</label> <br>
+                <select required  id="role" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
+                  <option value="Admin">Admin</option>
+                  <option value="User">User</option>
+                </select>
+              </div>
+              <button type="submit" class="ml-32 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:shadow-md transition duration-200">Sign Up</button>
+              <p class="mt-4 text-purple-800">Already have an Account? &nbsp; <a href="login.html"><b>Login</b></a></p>
+            </div>
+        </div>
+      </div>
+      </form>
+</body>
+</html>

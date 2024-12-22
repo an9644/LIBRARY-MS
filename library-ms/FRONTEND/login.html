@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+           async function login(event){
+                event.preventDefault()
+
+                const username =document.getElementById('username').value
+                const password=document.getElementById('password').value
+
+                try {
+                  const response=await fetch("http://127.0.0.1:3011/login",{
+                        method :'POST',
+                        credentials: 'include', //cookies ulla dta ahnu credentials ath include avum cookie storage kanan pattum
+                        headers:{'Content-Type': 'application/json'},
+                        body:JSON.stringify({
+                            Username : username,
+                            Password :password
+                        })
+                })
+                console.log(response)   
+                const data=await response.json(); 
+                    console.log(data)
+
+                if(response.status === 200){
+                    alert("Login Successfull")
+                    window.location.href='./home.html'
+                    
+                } else{
+                    alert("user does not exist")
+                    window.location.href='./signup.html'
+                }
+                } catch (error) {
+                  console.error('Login error:', error);
+                  alert(`Login failed: ${error.message}`);  
+                }
+                               
+            }
+    </script>
+</head>
+<body class="bg-purple-100">
+    
+   <form action="" onsubmit="login(event)">
+    <div class=" mt-32 flex justify-center items-center h-auto bg-gray-100 ">
+      <div class="bg-white rounded-lg shadow-md p-8 w-96 ">
+        <h2 class="text-3xl text-center text-purple-800 font-bold mb-4">Login</h2>
+          <div class="mb-4">
+            <label for="username" class="text-sm text-purple-800 font-bold mb-2">Username :</label>
+            <input id="username" type="text" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" placeholder="Enter your username">
+          </div>
+          <div class="mb-4">
+            <label for="password" class="text-sm text-purple-800 font-bold mb-2">Password :</label>
+            <input id="password" type="password" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" placeholder="Password">
+          </div>
+          <button type="submit" class="ml-32 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:shadow-md transition duration-200">Login</button>
+          <p class="mt-4 text-purple-800">Don't have an Account? &nbsp; <a href="signup.html"><b>Sign Up</b></a></p>
+        </div>
+    </div>
+   </form>
+    
+</body>
+</html>

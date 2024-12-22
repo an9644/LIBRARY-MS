@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+   async function viewBook(){
+    try {
+            const response=await fetch("http://127.0.0.1:3011/viewallbook",{
+            method:'GET',
+           credentials: 'include'
+            });
+            console.log(response);
+            
+             const data1=await response.json();
+             
+             console.log(data1.length);
+             
+            if(response.status!=404){
+                console.log(data1,"data");
+                const container=document.getElementById("cards")
+                container.innerHTML='';
+                data1.forEach(book => {
+                    // console.log(book);
+                    const bookdiv=document.createElement("div");
+                    bookdiv.className =" border-2 border-fuchsia-700 p-4 bg-white rounded-lg shadow-md";
+
+                   const bookname=document.createElement("h1");
+                   bookname.id='booktitle';
+                   bookname.className = "text-lg font-semibold";
+                   bookname.innerHTML = book[1].bookName;
+
+                //    bookname.value=book[1].bookId
+                //    bookname.innerHTML=book[1].bookId;
+
+                   const image=document.createElement("img");
+                   image.src="./images/purple.jpeg";
+                   image.className = "w-full h-48 object-cover rounded-md";
+
+                   const genre = document.createElement("p");
+                   genre.className = "text-gray-700 mt-2 ml-12";
+                    genre.innerHTML = book[1].genre;
+                 
+                //    const description = document.createElement("p");
+                //    description.className = "text-gray-700 mt-2";
+                //    description.innerHTML = book[1].description;
+
+                   
+               
+
+                const more = document.createElement("button");
+                more.onclick = function() {
+                    handleMore(book[1].bookId);
+                    console.log( book[1].bookId);
+                    
+                };            
+                  more.className = "mt-4 py-2 px-4 ml-6 bg-purple-500 text-white rounded hover:bg-purple-700";
+                  more.textContent = 'View More';
+
+                              
+
+                    bookdiv.appendChild(bookname);
+                    bookdiv.appendChild(image);
+                    bookdiv.appendChild(genre);      
+                    // bookdiv.appendChild(description);
+                    bookdiv.appendChild(more);         
+                   container.appendChild(bookdiv);         
+                 
+               });
+        }  else{
+            window.location.href='/notfound.html';
+            alert("Failed to load Book. Please try again.");                        
+
+        }   } catch (error) {
+            console.error("Error:", error);
+            alert("internal server error");                        
+
+                    }    }
+
+    function handleMore(value1){
+          
+                // const more=document.getElementById("name").value;
+            console.log(value1);
+           localStorage.setItem('book',value1);
+            window.location.href='./learnmore.html'     
+        }
+        async function logout(){
+
+            try {
+                const responce= await fetch("http://127.0.0.1:3011/logout",{
+            method:'POST',
+            credentials: 'include', 
+            });
+            if(responce.ok){
+                localStorage.removeItem('library');
+                console.log('logout successfully');
+                window.location.href="./signup.html"
+                alert("Logout Successfullly!")
+
+            }else{
+                console.log('logout failed');
+            }
+
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }          
+            }
+         
+       
+     </script>
+</head>
+<body class="bg-purple-100"> 
+    
+    <div class="flex justify-center gap-16 text-2xl  mt-5 text-purple-800 p-4">
+        <a href="home.html">Home</a>
+        <a href="addbook.html">Add Book</a>
+        <a href="viewbooks.html">View Book</a>
+        <a href="login.html" onclick="logout()">Logout</a>
+    </div>
+    <div class="flex overflow-x-auto  snap-x space-x w-full flex justify-center p-4 hide-scrollbar relative">
+        <button class="absolute left-0 mt-16"> <!--this should only move when the arrow is clicked so it need js  -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+    </svg>              
+</button>
+            <div class="w-48 flex-shrink-0 relative group ">
+                <img  class="p-2 rounded-full w-36 h-36 object-cover border-4 border-purple-300 ring-2 ring-white transition-opacity duration-300 group-hover:opacity-30 group-hover:scale-110 mx-auto" src="./images/2.jpg"/>
+                 <span class="absolute inset-0 flex justify-center items-center text-xl text-purple-800 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300" > Fiction </span>
+            </div>
+            <div class="w-48 flex-shrink-0 relative group  ">
+                <img class="p-2 rounded-full w-36 h-36 object-cover border-4 border-purple-300 ring-2 ring-white transition-opacity duration-300 group-hover:opacity-30 group-hover:scale-110 mx-auto" src="./images/2.jpg" width="180px" height="180px" alt="">
+                <span class="absolute inset-0 flex justify-center items-center text-xl text-purple-800 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Thriller</span>
+            </div>
+            <div class="w-48 flex-shrink-0 relative group">
+                <img class="p-2 rounded-full w-36 h-36 object-cover border-4 border-purple-300 ring-2 ring-white transition-opacity duration-300 group-hover:opacity-30 group-hover:scale-110  mx-auto" src="./images/2.jpg" width="180px" height="180px" alt="">
+                <span class="absolute inset-0 flex justify-center items-center text-xl text-purple-800 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Fantacy</span>
+            </div>
+            <div class="w-48 flex-shrink-0 relative group">
+                <img class="p-2 rounded-full w-36 h-36 object-cover border-4 border-purple-300 ring-2 ring-white transition-opacity duration-300 group-hover:opacity-30 group-hover:scale-110 mx-auto" src="./images/2.jpg" width="180px" height="180px" alt="">
+                <span class="absolute inset-0 flex justify-center items-center text-xl text-purple-800 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Fairy Tail</span>
+            </div>
+            <div class="w-48 flex-shrink-0 relative group">
+                <img class="p-2 rounded-full w-36 h-36 object-cover border-4 border-purple-300 ring-2 ring-white transition-opacity duration-300 group-hover:opacity-30 group-hover:scale-110 mx-auto" src="./images/2.jpg" width="180px" height="180px" alt="">
+                <span class="absolute inset-0 flex justify-center items-center text-xl text-purple-800 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Action Fiction</span>
+            </div>
+            <div class="w-48 flex-shrink-0 relative group">
+                <img class="p-2 rounded-full w-36 h-36 object-cover border-4 border-purple-300 ring-2 ring-white transition-opacity duration-300 group-hover:opacity-30 group-hover:scale-110 mx-auto" src="./images/2.jpg" width="180px" height="180px" alt="">
+                <span class="absolute inset-0 flex justify-center items-center text-xl text-purple-800 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Novel</span>
+            </div>  
+            <div class="w-48 flex-shrink-0 relative group">
+                <img class="p-2 rounded-full w-36 h-36 object-cover border-4 border-purple-300 ring-2 ring-white transition-opacity duration-300 group-hover:opacity-30 group-hover:scale-110 mx-auto" src="./images/2.jpg" width="180px" height="180px" alt="">
+                <span class="absolute inset-0 flex justify-center items-center text-xl text-purple-800 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Romance</span>
+            </div>  
+            <div class="w-48  flex-shrink-0 relative group">
+                <img class=" p-2 rounded-full w-36 h-36 object-cover border-4 border-purple-300 ring-2 ring-white transition-opacity duration-300 group-hover:opacity-30 group-hover:scale-110 mx-auto" src="./images/2.jpg" width="180px" height="180px" alt="">
+                <span class="absolute inset-0 flex justify-center items-center text-xl text-purple-800 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">History</span>
+            </div>  
+                    <button class="absolute right-0 mt-16">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+                </button>
+            </div>
+            <div >
+                <div id="cards" class="flex flex-wrap justify-center gap-12 ml-12 mt-12"></div>
+
+            </div>
+            <div class='flex justify-center mb-40'>
+                <button class='w-80 h-10 rounded-full bg-purple-500 text-white font-medium  mt-4 hover:bg-purple-600' onclick="viewBook()" >View all Books</button>
+            </div>
+            <!-- <div class="flex flex-wrap justify-center  gap-12 ml-12 mt-12 ">
+                  <div class="flex flex-wrap justify-center bg-purple-300 border-4 border-purple-300 rounded-md font-bold hover:shadow-xl transition duration-200 w-64">
+                        <a href="learnmore.html"><img class="mt-4  w-44 h-52 object-cover rounded-md" src="./images/i fell in love.jpg" alt=""></a>
+                        <div class="mt-2 p-4 text-purple-800"><span class="text">I Fell In Love With Hope</span></div>
+                         <a href="learnmore/hyper.html"></a>
+                </div>                -->
+              
+            
+
+</body>
+</html>

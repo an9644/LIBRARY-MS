@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn More</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      
+     window.onload=async(req,res)=>{
+        const bookId=localStorage.getItem("book")
+        console.log(bookId);        
+        try {
+          const response = await  fetch(`http://127.0.0.1:3011/getbook?bookId=${bookId}`,{
+            method:"GET",
+            credentials:"include"
+          })
+          
+         console.log(response);
+ 
+         let data=await response.json()
+         console.log(data)
+        document.getElementById("booktitle").textContent= data.bookName
+         document.getElementById("author").textContent=data.author
+         document.getElementById("genre").textContent=data.genre
+         document.getElementById("des").textContent=data.description
+         document.getElementById("price").textContent=data.price
+        getuser();
+
+        } catch (error) {
+          console.log(error);     
+        }
+     }
+
+
+    async function getuser(){
+     const responses= await fetch("http://127.0.0.1:3011/viewuser",{
+                method:"GET",
+                credentials:"include"
+            });
+            console.log(responses);
+
+            const data1 = await responses.json();
+            console.log(data1);
+            console.log(data1.user);
+
+            if(data1.user == "Admin"){
+              document.getElementById("admin").style.display="block";
+              document.getElementById("admin2").style.display="block";
+            }        
+     }
+       
+//  //delete course
+         async function deletebook(event){
+                 event.preventDefault()
+                 let books=localStorage.getItem("book");
+             
+                     const response= await fetch(`http://127.0.0.1:3011/deletebook?bookid=${books}`,{
+                     method:"DELETE",
+                     credentials:"include",
+                 })  
+ 
+                 console.log(response);
+                 const data= await response.json()
+                 console.log(data);
+                 if (response.status === 200) {
+                     alert("Book has been deleted");
+                     window.location.href='./viewbooks.html'
+                 } else if (response.status === 400) {
+                     alert(data.message);
+                 } else {
+                     alert('Failed to delete book');
+                 }
+                 }
+      async function logout(){
+
+        try {
+            const responce= await fetch("http://127.0.0.1:3011/logout",{
+        method:'POST',
+        credentials: 'include', 
+        });
+        if(responce.ok){
+            localStorage.removeItem('library');
+            console.log('logout successfully');
+            window.location.href="./signup.html"
+            alert("Logout Successfullly!")
+
+        }else{
+            console.log('logout failed');
+        }
+
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }          
+        }
+
+
+ 
+     </script>
+
+</head>
+<body class="bg-purple-100">
+    <div class="flex justify-center gap-16 text-2xl  mt-5 text-purple-800 p-4">
+        <a href="home.html">Home</a>
+        <a href="addbook.html">Add Book</a>
+        <a href="viewbooks.html">View Book</a>
+        <a href="login.html" onclick="logout()">Logout</a>
+    </div>
+
+ 
+    
+      <br>
+      <div class="ml-[700px] mt-12 rounded-md h-auto rounded-xl shadow-xl  w-[500px] p-4 bg-purple-200">
+            
+                <div id="image"><img class="ml-32" src="./images/i fell in love.jpg" width="200px" height="100px" alt=""></div>
+
+                <div class="text-fuchsia-700 font-bold text-4xl text-center mt-2" id="booktitle"></div>
+                <h2 class=" text-fuchsia-700 font-bold text-xl mt-4">Author</h2>
+                 <div class="text-fuchsia-500 ml-4 " id="author"></div>
+                 <h2 class=" text-fuchsia-700 font-bold text-xl mt-4">Genre</h2>
+                 <div id="genre" class="text-fuchsia-500 ml-4"></div>
+                 <h2 class=" text-fuchsia-700 font-bold text-xl mt-4">Description</h2>
+                 <div id="des" class="text-fuchsia-500 ml-4"></div>
+                 <div class="ml-20 text-red-600 font-bold">
+                 <div id="price" class="text-2xl text-right mx-4"></div>    
+                 <div class="ml-24 text-white bg-violet-600 rounded text-center   w-32">
+                 <button class="bg-violet-600 h-auto  shadow-md rounded-xl p-2 " type="submit" value="Add to cart"> Add to Cart</button>
+   
+                 </div>
+                </div>                 
+      </div>
+      <div class="ml-[850px] w-56 mt-14 grid grid-cols-2">
+        <button id="admin2" style="display: none;" class=" bg-blue-700 text-white p-2  rounded-xl  shadow-xl text-sm" type="submit"   vlaue="Edit Course"> <a href="update.html">Edit Course</a></button>
+        <button id="admin" style="display: none;"   class="bg-red-700 text-white py-2 ml-4 rounded-xl shadow-xl text-sm" type="submit" onclick="deletebook(event)" vlaue="Remove Course"> Remove Course</button>
+        <br><br>
+      </div>
+    
+</body>
+</html>

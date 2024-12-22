@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+       window.onload=async()=>{
+            try{
+            
+           const response=await fetch("http://127.0.0.1:3011/viewuser",{
+            method:'GET',
+           credentials: 'include', 
+            });          
+           
+           const data =await response.json();
+           
+           if(data.user=='Admin'){
+            
+            document.getElementById("admin").style.display='block';
+            
+           }}
+           catch(error){
+            console.log(error);}
+            
+
+                async function logout(){
+
+            try {
+                const responce= await fetch("http://127.0.0.1:3011/logout",{
+            method:'POST',
+           credentials: 'include', 
+            });
+            if(responce.ok){
+                localStorage.removeItem('library');
+                console.log('logout successfully');
+                window.location.href="./signup.html"
+                alert("Logout Successfullly!")
+
+            }else{
+                console.log('logout failed');
+           }
+
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }          
+        }
+    
+        }
+    </script>
+</head>
+<body class="bg-purple-100">
+    
+    <div class="flex justify-center gap-16 text-2xl  mt-5 text-purple-800 p-4">
+        <a href="home.html">Home</a>
+        <a href="addbook.html" style="display:none" id="admin">Add Book</a>
+        <a href="viewbooks.html">View Book</a>
+        <a href="login.html" onclick="logout()">LogOut</a>
+    </div>
+
+    
+
+    <!--  -->
+</div>
+    <div>
+        <div class="text-center  mt-24 font-bold mt-44">
+            <label class=" text-4xl text-purple-800 font-sans"  >Welcome to the Library..... </label>
+        </div>
+        <div class="grid grid-cols-3 mt-4 gap-4">
+            <div class="bg-[url('./images/bg1.jpeg')] bg-cover h-96 w-full"></div>
+            <div class="bg-[url('./images/bg1.jpeg')] bg-cover h-96 w-full"></div>
+            <div class="bg-[url('./images/bg1.jpeg')] bg-cover h-96 w-full"></div>
+          </div>
+
+    </div>
+        
+    <!-- footer -->
+    <footer class="bg-gray-200 text-gray-600 py-4   text-center p-4 fixed bottom-0 left-0 w-full">
+        <div class="container mx-auto px-4">
+          <div class="flex flex-wrap justify-between">
+            <div class="w-full md:w-1/2 xl:w-1/3">
+              <h5 class="text-lg font-bold mb-2">About Us</h5>
+              <p class="text-sm">This is a Virtual Library.You will get all information about your favorite book.</p>
+            </div>
+            <div class="w-full md:w-1/2 xl:w-1/3">
+              <h5 class="text-lg font-bold mb-2">Quick Links</h5>
+              <ul class="list-none mb-0">
+                <li class="mb-2"><a href="#" class="text-sm text-purple-600 hover:text-purple-800">Home</a></li>
+                <li class="mb-2"><a href="#" class="text-sm text-purple-600 hover:text-purple-800">About</a></li>
+                <li class="mb-2"><a href="#" class="text-sm text-purple-600 hover:text-purple-800">Contact</a></li>
+              </ul>
+            </div>
+            <div class="w-full md:w-1/2 xl:w-1/3">
+              <h5 class="text-lg font-bold mb-2">Social Media</h5>
+              <ul class="list-none mb-0">
+                <li class="mb-2"><a href="#" class="text-sm text-purple-600 hover:text-purple-800">Facebook</a></li>
+                <li class="mb-2"><a href="#" class="text-sm text-purple-600 hover:text-purple-800">Twitter</a></li>
+                <li class="mb-2"><a href="#" class="text-sm text-purple-600 hover:text-purple-800">Instagram</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <p class="text-sm">&copy; 2024 Your Company. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+</body>
+</html>

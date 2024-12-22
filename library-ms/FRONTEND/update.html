@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.onload=async()=>{
+                
+                let bookid=localStorage.getItem("book")
+                console.log(bookid);
+                
+            const response= await fetch(`http://127.0.0.1:3011/getbook?bookId=${bookid}`,{
+                    method:"GET",
+                    credentials:"include",
+                });
+
+                console.log(response);
+                let data=await response.json()
+                console.log(data);
+                
+            
+                
+                console.log(data.bookId);
+        
+                document.getElementById("newtitle").value=data.bookName
+                document.getElementById("newauthor").value=data.author
+                document.getElementById("bookid").value=data.bookId
+                document.getElementById("newgenre").value=data.genre
+                document.getElementById("newprice").value=data.price
+                document.getElementById("newdescription").value=data.description
+
+
+    }
+
+        
+        async function updateBook(event){
+            event.preventDefault();
+            try {
+                const Bid = document.getElementById('bookid').value;
+            const Newtitle = document.getElementById('newtitle').value
+            const Newauthor = document.getElementById('newauthor').value;
+            const Newgenre = document.getElementById('newgenre').value;
+            const Newprice = document.getElementById('newprice').value;
+            const Newdescription = document.getElementById('newdescription').value;
+
+
+            console.log(Bid,Newtitle,Newauthor, Newgenre,Newprice,Newdescription);
+            
+  
+
+            const response = await fetch(`http://127.0.0.1:3011/update`,{
+                method: 'PUT',
+                credentials:'include',
+                headers:{"Content-Type":"application/json" },
+                body: JSON.stringify({
+                    newtitle: Newtitle,
+                    bookid:Bid,
+                    newauthor: Newauthor,
+                    newgenre: Newgenre,
+                    newdescription: Newdescription,
+                    newprice:Newprice
+                })
+            })
+
+            console.log(response);
+            if (response.status == 200) {
+                const data = await response.json();
+            console.log(data);
+           
+           alert("Book updated Successfully");
+           window.location.href = './learnmore.html';
+           } else{
+           alert("Book not found");
+           }
+            } catch (error) {
+                console.error('Error updating book:', error);
+    // alert('Error updating book. Please try again.');
+            }
+        async function logout(){
+
+            try {
+                const responce= await fetch("http://127.0.0.1:3011/logout",{
+            method:'POST',
+            credentials: 'include', 
+            });
+            if(responce.ok){
+                localStorage.removeItem('library');
+                console.log('logout successfully');
+                window.location.href="./signup.html"
+                alert("Logout Successfullly!")
+
+            }else{
+                console.log('logout failed');
+            }
+
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }          
+            }
+            
+            
+        }     
+        
+
+  
+</script>
+
+    
+
+</head>
+<body class="bg-purple-100">
+    
+    <div class="flex justify-center gap-16 text-2xl  mt-5 text-purple-800 p-4">
+        <a href="home.html">Home</a>
+        <a href="addbook.html" >Add Book</a>
+        <a href="viewbooks.html">View Book</a>
+        <a href="login.html" onclick="logout()">Login</a>
+    </div>
+    <form action="" onsubmit="updateBook(event)">
+        <div class="flex justify-center items-center h-screen mt-12 ">
+            <div class="bg-gray-100 p-8 rounded-xl shadow-xl w-[600px]">
+                <p class="text-3xl font-bold mb-4 text-center text-purple-800 ">Update Book</p>
+
+
+                
+                    <div class="mb-4">
+                        <label class=" text-purple-800 block  text-sm font-bold mb-2" > Title :</label>
+                        <input id="newtitle" class="shadow appearance-none border rounded w-full py-2 px-3   leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Book Title">
+                    </div>
+                    <div class="mb-4">
+                        <label class=" text-purple-800 block  text-sm font-bold mb-2" > Author :</label>
+                        <input id="newauthor" class="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline" id="author" type="text" placeholder="author name">
+                    </div>
+                    <div class="mb-4">
+                        <label class="text-purple-800 block  text-sm font-bold mb-2" > Book ID :</label>
+                        <input id="bookid" class="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Book ID">
+                    </div>
+                    <div class="mb-4">
+                        <label class="text-purple-800 block  text-sm font-bold mb-2" > Genre :</label>
+                        <select id="newgenre" class="text-gray-700 shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="Select" selected>Select</option>
+                            <option value="Novel">Novel</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Action Fiction">Action Fiction</option>
+                            <option value="Fairy Tale">Fairy Tale</option>
+                            <option value="History">History</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class=" text-purple-800 block  text-sm font-bold mb-2" for="Description" > Description </label>
+                        <textarea id="newdescription" class=" shadow appearance-none border rounded w-full py-2 px-3   leading-tight focus:outline-none  focus:shadow-outline" placeholder="Short Description...." cols="30" rows="10"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class=" text-purple-800 block  text-sm font-bold mb-2" > Price :</label>
+                        <input id="newprice" class="shadow appearance-none border rounded w-full py-2 px-3   leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Price">
+                    </div>
+                            <button 
+                            class="ml-52 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:shadow-md transition duration-200"
+                            type="submit" >  Update Book  </button>       
+                 </div>
+        </div>
+    </form>
+           
+</body>
+</html>
